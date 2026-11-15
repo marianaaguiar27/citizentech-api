@@ -5,7 +5,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class RecursoNaoEncontradoException extends RuntimeException {
+
     public RecursoNaoEncontradoException(String recurso, Long id) {
         super(recurso + " não encontrado(a) com id " + id);
+    }
+
+    public RecursoNaoEncontradoException(String mensagem) {
+        super(mensagem);
     }
 }
