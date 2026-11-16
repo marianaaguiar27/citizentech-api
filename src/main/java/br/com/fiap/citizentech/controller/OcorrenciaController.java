@@ -17,6 +17,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import br.com.fiap.citizentech.security.UsuarioLogado;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,8 +54,9 @@ public class OcorrenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<OcorrenciaResponse>> criar(@RequestBody @Valid OcorrenciaRequest dados) {
-        EntityModel<OcorrenciaResponse> criada = assembler.toModel(service.criar(dados));
+    public ResponseEntity<EntityModel<OcorrenciaResponse>> criar(@RequestBody @Valid OcorrenciaRequest dados,
+                                                                 @AuthenticationPrincipal UsuarioLogado usuario) {
+        EntityModel<OcorrenciaResponse> criada = assembler.toModel(service.criar(dados, usuario.id()));
         return ResponseEntity.created(criada.getRequiredLink("self").toUri()).body(criada);
     }
 

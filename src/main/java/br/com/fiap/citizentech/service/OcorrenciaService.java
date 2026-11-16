@@ -52,11 +52,11 @@ public class OcorrenciaService {
 
     @CacheEvict(value = "estatisticasOcorrencias", allEntries = true)
     @Transactional
-    public OcorrenciaResponse criar(OcorrenciaRequest dados) {
+    public OcorrenciaResponse criar(OcorrenciaRequest dados, Long autorId) {
         Regiao regiao = regiaoRepository.findById(dados.regiaoId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Região", dados.regiaoId()));
-        Usuario autor = usuarioRepository.findById(dados.autorId())
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", dados.autorId()));
+        Usuario autor = usuarioRepository.findById(autorId)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário", autorId));
 
         Ocorrencia ocorrencia = new Ocorrencia();
         ocorrencia.setTipo(dados.tipo());
