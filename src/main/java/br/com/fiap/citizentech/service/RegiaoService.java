@@ -52,6 +52,7 @@ public class RegiaoService {
     @Transactional
     public void deletar(Long id) {
         repository.delete(buscarEntidade(id));
+        repository.flush();
     }
 
     private Regiao buscarEntidade(Long id) {

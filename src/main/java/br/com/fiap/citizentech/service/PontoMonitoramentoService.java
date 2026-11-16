@@ -50,6 +50,7 @@ public class PontoMonitoramentoService {
     @Transactional
     public void deletar(Long id) {
         repository.delete(buscarEntidade(id));
+        repository.flush();
     }
 
     private PontoMonitoramento buscarEntidade(Long id) {
