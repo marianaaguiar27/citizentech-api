@@ -3,9 +3,11 @@ package br.com.fiap.citizentech.dto;
 import br.com.fiap.citizentech.model.Alerta;
 import br.com.fiap.citizentech.model.NivelRisco;
 import br.com.fiap.citizentech.model.StatusAlerta;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
 
+@Relation(collectionRelation = "alertas", itemRelation = "alerta")
 public record AlertaResponse(Long id, NivelRisco nivel, String mensagem, StatusAlerta status,
                              LocalDateTime criadoEm, Long regiaoId, String regiaoNome) {
 

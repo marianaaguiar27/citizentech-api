@@ -2,7 +2,9 @@ package br.com.fiap.citizentech.dto;
 
 import br.com.fiap.citizentech.model.NivelRisco;
 import br.com.fiap.citizentech.model.Regiao;
+import org.springframework.hateoas.server.core.Relation;
 
+@Relation(collectionRelation = "regioes", itemRelation = "regiao")
 public record RegiaoResponse(Long id, String nome, String cidade, String uf, NivelRisco nivelRisco) {
 
     public static RegiaoResponse from(Regiao r) {

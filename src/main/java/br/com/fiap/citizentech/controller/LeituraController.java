@@ -1,19 +1,22 @@
 package br.com.fiap.citizentech.controller;
 
+import br.com.fiap.citizentech.assembler.LeituraModelAssembler;
 import br.com.fiap.citizentech.dto.LeituraRegistradaResponse;
 import br.com.fiap.citizentech.dto.LeituraRequest;
 import br.com.fiap.citizentech.dto.LeituraResponse;
 import br.com.fiap.citizentech.service.LeituraService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springdoc.core.annotations.ParameterObject;
 
 import java.net.URI;
 
@@ -23,22 +26,25 @@ import java.net.URI;
 public class LeituraController {
 
     private final LeituraService service;
+    private final LeituraModelAssembler assembler;
+    private final PagedResourcesAssembler<LeituraResponse> pagedAssembler;
 
     @GetMapping
-    public Page<LeituraResponse> listar(@RequestParam(required = false) Long pontoId,
-                                        @ParameterObject @PageableDefault(size = 10, sort = "dataHora",
-                                                direction = Sort.Direction.DESC) Pageable pageable) {
-        return service.listar(pontoId, pageable);
+    public PagedModel<EntityModel<LeituraResponse>> listar(
+            @RequestParam(required = false) Long pontoId,
+            @ParameterObject @PageableDefault(size = 10, sort = "dataHora",
+                    direction = Sort.Direction.DESC) Pageable pageable) {
+        return pagedAssembler.toModel(service.listar(pontoId, pageable), assembler);
     }
 
     @GetMapping("/{id}")
-    public LeituraResponse buscar(@PathVariable Long id) {
-        return service.buscar(id);
+    public EntityModel<LeituraResponse> buscar(@PathVariable Long id) {
+        return assembler.toModel(service.buscar(id));
     }
 
     @GetMapping("/ponto/{pontoId}/ultima")
-    public LeituraResponse ultima(@PathVariable Long pontoId) {
-        return service.buscarUltima(pontoId);
+    public EntityModel<LeituraResponse> ultima(@PathVariable Long pontoId) {
+        return assembler.toModel(service.buscarUltima(pontoId));
     }
 
     @PostMapping
