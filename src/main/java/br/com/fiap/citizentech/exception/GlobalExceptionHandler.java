@@ -18,6 +18,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.core.PropertyReferenceException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -102,6 +103,12 @@ public class GlobalExceptionHandler {
         log.warn("Uso inválido de consulta: {}", ex.getMessage());
         return montar(HttpStatus.BAD_REQUEST,
                 "Parâmetros de paginação ou ordenação inválidos. Verifique o campo 'sort'", req, List.of());
+    }
+
+    // Login com e-mail ou senha errados (mensagem genérica de propósito, para não revelar qual dos dois falhou)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErroResponse> autenticacao(AuthenticationException ex, HttpServletRequest req) {
+        return montar(HttpStatus.UNAUTHORIZED, "E-mail ou senha inválidos", req, List.of());
     }
 
     // Rede de segurança: nunca vaza stack trace para o cliente
