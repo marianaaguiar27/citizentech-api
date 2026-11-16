@@ -13,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springdoc.core.annotations.ParameterObject;
+
 
 import java.net.URI;
 import java.util.List;
@@ -27,7 +29,7 @@ public class AlertaController {
     @GetMapping
     public Page<AlertaResponse> listarPorRegiao(@RequestParam Long regiaoId,
                                                 @RequestParam(defaultValue = "ATIVO") StatusAlerta status,
-                                                @PageableDefault(size = 10, sort = "criadoEm",
+                                                @ParameterObject @PageableDefault(size = 10, sort = "criadoEm",
                                                         direction = Sort.Direction.DESC) Pageable pageable) {
         return service.listarPorRegiao(regiaoId, status, pageable);
     }

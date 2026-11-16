@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springdoc.core.annotations.ParameterObject;
 
 import java.net.URI;
 
@@ -25,7 +26,7 @@ public class LeituraController {
 
     @GetMapping
     public Page<LeituraResponse> listar(@RequestParam(required = false) Long pontoId,
-                                        @PageableDefault(size = 10, sort = "dataHora",
+                                        @ParameterObject @PageableDefault(size = 10, sort = "dataHora",
                                                 direction = Sort.Direction.DESC) Pageable pageable) {
         return service.listar(pontoId, pageable);
     }

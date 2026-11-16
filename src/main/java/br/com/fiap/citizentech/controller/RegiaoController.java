@@ -12,6 +12,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springdoc.core.annotations.ParameterObject;
+
 
 import java.net.URI;
 
@@ -24,7 +26,7 @@ public class RegiaoController {
 
     @GetMapping
     public Page<RegiaoResponse> listar(@RequestParam(required = false) NivelRisco nivelRisco,
-                                       @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+                                       @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
         return service.listar(nivelRisco, pageable);
     }
 

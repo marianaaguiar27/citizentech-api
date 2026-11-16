@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.core.PropertyReferenceException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -87,6 +89,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErroResponse> acessoNegado(AccessDeniedException ex, HttpServletRequest req) {
         return montar(HttpStatus.FORBIDDEN, "Você não tem permissão para acessar este recurso", req, List.of());
+    }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ErroResponse> propriedadeInvalida(PropertyReferenceException ex, HttpServletRequest req) {
+        return montar(HttpStatus.BAD_REQUEST,
+                "Campo de ordenação inválido: '" + ex.getPropertyName() + "'", req, List.of());
+    }
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ErroResponse> usoInvalidoDeConsulta(InvalidDataAccessApiUsageException ex, HttpServletRequest req) {
+        log.warn("Uso inválido de consulta: {}", ex.getMessage());
+        return montar(HttpStatus.BAD_REQUEST,
+                "Parâmetros de paginação ou ordenação inválidos. Verifique o campo 'sort'", req, List.of());
     }
 
     // Rede de segurança: nunca vaza stack trace para o cliente
