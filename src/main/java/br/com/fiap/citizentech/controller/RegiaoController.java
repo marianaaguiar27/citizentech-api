@@ -4,6 +4,7 @@ import br.com.fiap.citizentech.dto.RegiaoRequest;
 import br.com.fiap.citizentech.dto.RegiaoResponse;
 import br.com.fiap.citizentech.model.NivelRisco;
 import br.com.fiap.citizentech.service.RegiaoService;
+import br.com.fiap.citizentech.dto.RiscoRegiaoResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,11 @@ public class RegiaoController {
     @GetMapping("/{id}")
     public RegiaoResponse buscar(@PathVariable Long id) {
         return service.buscar(id);
+    }
+
+    @GetMapping("/{id}/risco")
+    public RiscoRegiaoResponse risco(@PathVariable Long id) {
+        return service.consultarRisco(id);
     }
 
     @PostMapping

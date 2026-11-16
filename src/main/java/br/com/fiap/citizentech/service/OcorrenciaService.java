@@ -11,6 +11,8 @@ import br.com.fiap.citizentech.repository.RegiaoRepository;
 import br.com.fiap.citizentech.repository.UsuarioRepository;
 import br.com.fiap.citizentech.specification.OcorrenciaSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class OcorrenciaService {
         return OcorrenciaResponse.from(buscarEntidade(id));
     }
 
+    @Cacheable(value = "estatisticasOcorrencias", key = "#regiaoId")
     @Transactional(readOnly = true)
     public List<ContagemPorTipo> estatisticas(Long regiaoId) {
         if (!regiaoRepository.existsById(regiaoId)) {
@@ -47,6 +50,7 @@ public class OcorrenciaService {
         return repository.contarPorTipo(regiaoId);
     }
 
+    @CacheEvict(value = "estatisticasOcorrencias", allEntries = true)
     @Transactional
     public OcorrenciaResponse criar(OcorrenciaRequest dados) {
         Regiao regiao = regiaoRepository.findById(dados.regiaoId())
@@ -63,6 +67,7 @@ public class OcorrenciaService {
     }
 
     // Edita só o conteúdo. O autor nunca muda e o status tem endpoint próprio.
+    @CacheEvict(value = "estatisticasOcorrencias", allEntries = true)
     @Transactional
     public OcorrenciaResponse atualizar(Long id, OcorrenciaRequest dados) {
         Ocorrencia ocorrencia = buscarEntidade(id);
@@ -93,6 +98,7 @@ public class OcorrenciaService {
         return OcorrenciaResponse.from(ocorrencia);
     }
 
+    @CacheEvict(value = "estatisticasOcorrencias", allEntries = true)
     @Transactional
     public void deletar(Long id) {
         repository.delete(buscarEntidade(id));

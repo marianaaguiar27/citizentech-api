@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 public class LeituraService {
 
     // Janela usada para considerar o "pico recente" de água na região
-    private static final int JANELA_HORAS = 6;
+    public static final int JANELA_HORAS = 6;
 
     private final LeituraRepository repository;
     private final PontoMonitoramentoRepository pontoRepository;
@@ -49,6 +51,12 @@ public class LeituraService {
                 .orElseThrow(() -> new RecursoNaoEncontradoException(
                         "Nenhuma leitura registrada para o ponto " + pontoId));
     }
+
+    @Caching(evict = {
+            @CacheEvict(value = "regioes", allEntries = true),
+            @CacheEvict(value = "riscoRegiao", allEntries = true),
+            @CacheEvict(value = "alertasAtivos", allEntries = true)
+    })
 
     @Transactional
     public LeituraRegistradaResponse registrar(LeituraRequest dados) {

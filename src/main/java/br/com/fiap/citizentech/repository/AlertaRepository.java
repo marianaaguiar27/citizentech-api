@@ -18,6 +18,8 @@ public interface AlertaRepository extends JpaRepository<Alerta, Long> {
     // Evita criar alerta duplicado enquanto já existe um ativo no mesmo nível
     boolean existsByRegiaoIdAndNivelAndStatus(Long regiaoId, NivelRisco nivel, StatusAlerta status);
 
+    long countByRegiaoIdAndStatus(Long regiaoId, StatusAlerta status);
+
     // JPQL com join fetch: traz a região junto e evita N+1 ao listar os alertas ativos
     @Query("""
             select a from Alerta a
@@ -26,4 +28,5 @@ public interface AlertaRepository extends JpaRepository<Alerta, Long> {
             order by a.criadoEm desc
             """)
     List<Alerta> findAtivosComRegiao();
+
 }

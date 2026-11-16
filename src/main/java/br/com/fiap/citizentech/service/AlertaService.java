@@ -10,6 +10,9 @@ import br.com.fiap.citizentech.model.StatusAlerta;
 import br.com.fiap.citizentech.repository.AlertaRepository;
 import br.com.fiap.citizentech.repository.RegiaoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ public class AlertaService {
         return repository.findByRegiaoIdAndStatus(regiaoId, status, pageable).map(AlertaResponse::from);
     }
 
+    @Cacheable("alertasAtivos")
     @Transactional(readOnly = true)
     public List<AlertaResponse> listarAtivos() {
         return repository.findAtivosComRegiao().stream().map(AlertaResponse::from).toList();
@@ -43,6 +47,10 @@ public class AlertaService {
     }
 
     // Alerta manual, emitido pela Defesa Civil
+    @Caching(evict = {
+            @CacheEvict(value = "alertasAtivos", allEntries = true),
+            @CacheEvict(value = "riscoRegiao", allEntries = true)
+    })
     @Transactional
     public AlertaResponse criar(AlertaRequest dados) {
         Regiao regiao = regiaoRepository.findById(dados.regiaoId())
@@ -54,6 +62,10 @@ public class AlertaService {
         return AlertaResponse.from(repository.save(alerta));
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "alertasAtivos", allEntries = true),
+            @CacheEvict(value = "riscoRegiao", allEntries = true)
+    })
     @Transactional
     public AlertaResponse resolver(Long id) {
         Alerta alerta = buscarEntidade(id);
@@ -64,6 +76,10 @@ public class AlertaService {
         return AlertaResponse.from(alerta);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "alertasAtivos", allEntries = true),
+            @CacheEvict(value = "riscoRegiao", allEntries = true)
+    })
     @Transactional
     public void deletar(Long id) {
         repository.delete(buscarEntidade(id));
