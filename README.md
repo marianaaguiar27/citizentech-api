@@ -10,9 +10,10 @@ API REST em Java/Spring Boot da solução **AlertaBairro** (CitizenTech, Global 
 | Gustavo Miguel Martins de Oliveira | rm566666 | 2TDSPB |
 | Mariana de Paula Aguiar | rm566850 | 2TDSPB |
 
-## Vídeo pitch
+## Vídeos
 
-falta gravar ainda
+- [Apresentação Java Advanced](https://youtu.be/MrB4x4IKO6A)
+- [Pitch](https://youtu.be/5Lj6o5PiTPA)
 
 ## A solução
 
